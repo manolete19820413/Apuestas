@@ -8,6 +8,7 @@
 	<name>Apuestas Maven Webapp</name>
 	<url>http://maven.apache.org</url>
 	<dependencies>
+		<!-- Especificación servlet para que funcione con Spring -->
 		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>servlet-api</artifactId>
