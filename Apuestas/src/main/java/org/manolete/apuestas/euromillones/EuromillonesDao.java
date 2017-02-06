@@ -30,6 +30,8 @@ public class EuromillonesDao {
 		return this.find(null, 0);
 	}
 	
+	@SuppressWarnings("unchecked")
+	@Transactional(readOnly = true)
 	public List<Sorteo> find(Date fecha, int numeroRegistros) {
 		Query consulta = this.entityManager.createQuery("select s from Sorteo s where s.fecha_sorteo <= :fecha order by s.fecha_sorteo desc");
 		
@@ -42,6 +44,8 @@ public class EuromillonesDao {
 		return consulta.getResultList();
 	}
 	
+	@SuppressWarnings("unchecked")
+	@Transactional(readOnly = true)
 	public Sorteo getPrediccion(Date fecha, boolean masFrecuentes) {
 		Sorteo salida = new Sorteo();
 		StringBuilder sbConsulta = new StringBuilder("select num1 as numero from (select num1 from apuestas.euromillones union all select num2 from apuestas.euromillones union all select num3 from apuestas.euromillones union all select num4 from apuestas.euromillones union all select num5 from apuestas.euromillones) numbersub group by numero order by count(*)");
@@ -84,5 +88,20 @@ public class EuromillonesDao {
 		
 		return salida;
 	}
-
+	
+	@SuppressWarnings("unchecked")
+	@Transactional(readOnly = true)
+	public List<Byte> getFrecuenciaNumeros(boolean porcentaje) {
+		Query consulta = this.entityManager.createNativeQuery("select (count(*) * 100) / total.todos as porcentaje from (select num1 from apuestas.euromillones union all select num2 from apuestas.euromillones union all select num3 from apuestas.euromillones union all select num4 from apuestas.euromillones union all select num5 from apuestas.euromillones) numbersub, (select count(*) as todos from apuestas.euromillones) total group by num1");
+		
+		return consulta.getResultList();
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Transactional(readOnly = true)
+	public List<Byte> getFrecuenciaEstrellas(boolean porcentaje) {
+		Query consulta = this.entityManager.createNativeQuery("select (count(*) * 100) / total.todos as porcentaje from (select estrella1 from apuestas.euromillones union all select estrella2 from apuestas.euromillones) estrellasub, (select count(*) as todos from apuestas.euromillones) total group by estrella1");
+		
+		return consulta.getResultList();
+	}
 }

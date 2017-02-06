@@ -15,19 +15,14 @@
 			<input type="text" id="fechaBusqueda" name="fechaBusqueda" value="<%= fechaBusqueda %>" alt="formato dd/mm/aaaa" /> <%= request.getAttribute("error") == null ? "formato 'dd/mm/aaaa'" : (String) request.getAttribute("error") %>
 			<input type="submit" value="Buscar" />
 		</form>
-		<table>
+		<table border="1" width="40%">
 			<tr>
 				<th>Fecha</th>
-				<th>Número 1</th>
-				<th>Número 2</th>
-				<th>Número 3</th>
-				<th>Número 4</th>
-				<th>Número 5</th>
-				<th>Estrella 1</th>
-				<th>Estrella 2</th>
+				<th colspan="5">Números</th>
+				<th colspan="2">Estrellas</th>
 			</tr>
 		<% for (Sorteo sorteo : sorteos) { %>
-			<tr>
+			<tr align="center">
 				<td><%= formatter.format(sorteo.getFecha_sorteo()) %></td>
 				<td><%= sorteo.getNum1() %></td>
 				<td><%= sorteo.getNum2() %></td>

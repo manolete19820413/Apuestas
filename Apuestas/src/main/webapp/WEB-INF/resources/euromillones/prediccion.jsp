@@ -18,13 +18,13 @@
 		<% if (prediccion == null) { %>
 		<h3>No hay datos suficientes para generar la predicción</h3>
 		<% } else { %>
-		<table border="1">
+		<table border="1" width="40%">
 			<tr>
 				<th>Fecha</th>
 				<th colspan="5">Números</th>
 				<th colspan="2">Estrellas</th>
 			</tr>
-			<tr>
+			<tr align="center">
 				<td><%= formatter.format(prediccion.getFecha_sorteo()) %></td>
 				<td><%= prediccion.getNum1() %></td>
 				<td><%= prediccion.getNum2() %></td>

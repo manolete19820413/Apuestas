@@ -2,14 +2,7 @@ package org.manolete.apuestas.euromillones;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -59,6 +52,16 @@ public class EuromillonesController {
 		ModelAndView mv = new ModelAndView("euromillones/prediccion");
 
 		mv.getModel().put("prediccion", this.euromillonesDao.getPrediccion(new Date(), Boolean.parseBoolean(frecuencia)));
+
+		return mv;
+	}
+	
+	@RequestMapping(value = "/porcentajes")
+	public ModelAndView porcentajes() {
+		ModelAndView mv = new ModelAndView("euromillones/porcentajes");
+
+		mv.getModel().put("numeros", this.euromillonesDao.getFrecuenciaNumeros(true));
+		mv.getModel().put("estrellas", this.euromillonesDao.getFrecuenciaEstrellas(true));
 
 		return mv;
 	}
