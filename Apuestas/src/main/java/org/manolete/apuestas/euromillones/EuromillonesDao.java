@@ -71,7 +71,6 @@ public class EuromillonesDao {
 		salida.setNum5(lista.get(4));
 		
 		sbConsulta = new StringBuilder("select estrella1 as numero from (select estrella1 from apuestas.euromillones union all select estrella2 from apuestas.euromillones) estrellasub group by estrella1 order by count(*)");
-		consulta = this.entityManager.createNativeQuery(sbConsulta.toString());
 		
 		if (masFrecuentes) {
 			sbConsulta.append(" desc");
@@ -79,9 +78,12 @@ public class EuromillonesDao {
 			sbConsulta.append(" asc");
 		}
 		
+		consulta = this.entityManager.createNativeQuery(sbConsulta.toString());
 		consulta.setMaxResults(2);
 		
 		lista = consulta.getResultList();
+		
+		Collections.sort(lista);
 		
 		salida.setEstrella1(lista.get(0));
 		salida.setEstrella2(lista.get(1));
