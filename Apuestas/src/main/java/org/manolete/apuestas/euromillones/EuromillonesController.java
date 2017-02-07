@@ -2,13 +2,19 @@ package org.manolete.apuestas.euromillones;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -65,7 +71,91 @@ public class EuromillonesController {
 
 		return mv;
 	}
-
+	
+	@RequestMapping(value = "/insertar")
+	public ModelAndView insertar(@RequestParam(name = "fecha_sorteo") String fechaSorteo, 
+								@RequestParam(name = "nums") List<String> paramNumeros,
+								@RequestParam(name = "stars") List<String> paramEstrellas) {
+		
+		try {
+			int i = 0;
+			boolean iguales = false;			
+			List<Byte> numeros = new ArrayList<Byte>();
+			
+			while (i < paramNumeros.size() && !iguales) {
+				byte byteNumber = Byte.parseByte(paramNumeros.get(i));
+				
+				if (byteNumber < 1 || byteNumber > 50) {
+					throw new NumberFormatException("El numero '" + byteNumber + "' no es válido" );
+				} else if (numeros.contains(byteNumber)) {
+					iguales = true;
+				} else {
+					numeros.add(byteNumber);
+					i++;
+				}
+			}
+						
+			if (!iguales) {
+				i = 0;
+				List<Byte> estrellas = new ArrayList<Byte>();
+				
+				while (i < paramEstrellas.size() && !iguales) {
+					byte byteNumber = Byte.parseByte(paramEstrellas.get(i));
+					
+					if (byteNumber < 1 || byteNumber > 12) {
+						throw new NumberFormatException("La estrella '" + byteNumber + "' no es válida" );
+					} else if (estrellas.contains(byteNumber)) {
+						iguales = true;
+					} else {
+						estrellas.add(byteNumber);
+						i++;
+					}
+				}
+				
+				if (!iguales) {
+					Sorteo nuevoSorteo = new Sorteo();
+					
+					nuevoSorteo.setFecha_sorteo(new SimpleDateFormat("dd/MM/yyyy").parse(fechaSorteo));
+					nuevoSorteo.setNum1(numeros.get(0));
+					nuevoSorteo.setNum2(numeros.get(1));
+					nuevoSorteo.setNum3(numeros.get(2));
+					nuevoSorteo.setNum4(numeros.get(3));
+					nuevoSorteo.setNum5(numeros.get(4));
+					nuevoSorteo.setEstrella1(estrellas.get(0));
+					nuevoSorteo.setEstrella2(estrellas.get(1));
+					
+					this.euromillonesDao.insertar(nuevoSorteo);
+				}
+			}
+			
+		} catch (ParseException e) {
+			log.error("El formato de la fecha de sorteo no es legible", e);
+		} catch (NumberFormatException e) {
+			log.error("Al menos un número o estrella no es numérico", e);
+		}
+		
+		return this.listado(null);
+	}
+	
+	@RequestMapping(value = "/borrar", method = RequestMethod.GET)
+	public ModelAndView borrar(@RequestParam(name = "fecha_sorteo") 
+							   @DateTimeFormat(pattern = "dd - MM - yyyy") Date fechaSorteo) {
+		
+		Sorteo sorteoBorrar = new Sorteo();
+		
+		// sorteoBorrar.setFecha_sorteo(fechaSorteo);
+		try {
+			sorteoBorrar.setFecha_sorteo(new SimpleDateFormat("dd - MM - yyyy").parse("07 - 07 - 2017"));
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		this.euromillonesDao.borrar(sorteoBorrar);
+		
+		return this.listado(null);
+	}
+	
 	@Autowired
 	public void setEuromillonesDao(EuromillonesDao euromillonesDao) {
 		this.euromillonesDao = euromillonesDao;

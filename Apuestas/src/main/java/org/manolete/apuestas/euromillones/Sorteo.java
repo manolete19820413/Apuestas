@@ -72,8 +72,6 @@ public class Sorteo {
 		return estrella2;
 	}
 	
-	@Basic
-	@Column(precision = 2, nullable = false)
 	public void setFecha_sorteo(Date fecha_sorteo) {
 		this.fecha_sorteo = fecha_sorteo;
 	}

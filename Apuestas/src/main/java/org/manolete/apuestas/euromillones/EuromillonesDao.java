@@ -24,14 +24,31 @@ public class EuromillonesDao {
 	}
 	
 	@SuppressWarnings("unchecked")
-	@Transactional(readOnly = true)
+	@Transactional
+	public void insertar(Sorteo sorteo) {
+		this.entityManager.persist(sorteo);
+		this.entityManager.flush();
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Transactional
+	public void borrar(Sorteo sorteo) {
+		if (!this.entityManager.contains(sorteo)) {
+			sorteo = this.entityManager.merge(sorteo);
+			// this.entityManager.flush();			
+		}
+		
+		this.entityManager.remove(sorteo);		
+		this.entityManager.flush();
+	}
+	
 	public List<Sorteo> find() {
 		System.out.println("Euromillones.findAll");
 		return this.find(null, 0);
 	}
 	
 	@SuppressWarnings("unchecked")
-	@Transactional(readOnly = true)
+	@Transactional
 	public List<Sorteo> find(Date fecha, int numeroRegistros) {
 		Query consulta = this.entityManager.createQuery("select s from Sorteo s where s.fecha_sorteo <= :fecha order by s.fecha_sorteo desc");
 		
