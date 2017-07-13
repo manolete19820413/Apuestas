@@ -3,6 +3,7 @@ package org.manolete.apuestas.euromillones;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -26,8 +27,10 @@ public class EuromillonesDao {
 	@SuppressWarnings("unchecked")
 	@Transactional
 	public void insertar(Sorteo sorteo) {
+		System.out.println("Fecha: " + sorteo.getFecha_sorteo());
+		System.out.println("TimeZone: " + TimeZone.getDefault().toString());
+		System.out.println("TimeZone 2: " + sorteo.getFecha_sorteo().getTimezoneOffset());
 		this.entityManager.persist(sorteo);
-		this.entityManager.flush();
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -35,11 +38,9 @@ public class EuromillonesDao {
 	public void borrar(Sorteo sorteo) {
 		if (!this.entityManager.contains(sorteo)) {
 			sorteo = this.entityManager.merge(sorteo);
-			// this.entityManager.flush();			
 		}
 		
 		this.entityManager.remove(sorteo);		
-		this.entityManager.flush();
 	}
 	
 	public List<Sorteo> find() {

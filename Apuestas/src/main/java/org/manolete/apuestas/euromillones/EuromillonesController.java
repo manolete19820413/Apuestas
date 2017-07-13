@@ -9,10 +9,8 @@ import java.util.List;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -115,7 +113,7 @@ public class EuromillonesController {
 				if (!iguales) {
 					Sorteo nuevoSorteo = new Sorteo();
 					
-					nuevoSorteo.setFecha_sorteo(new SimpleDateFormat("dd/MM/yyyy").parse(fechaSorteo));
+					nuevoSorteo.setFecha_sorteo(new Date(new SimpleDateFormat("dd/MM/yyyy").parse(fechaSorteo).getTime()));
 					nuevoSorteo.setNum1(numeros.get(0));
 					nuevoSorteo.setNum2(numeros.get(1));
 					nuevoSorteo.setNum3(numeros.get(2));
@@ -143,14 +141,7 @@ public class EuromillonesController {
 		
 		Sorteo sorteoBorrar = new Sorteo();
 		
-		// sorteoBorrar.setFecha_sorteo(fechaSorteo);
-		try {
-			sorteoBorrar.setFecha_sorteo(new SimpleDateFormat("dd - MM - yyyy").parse("07 - 07 - 2017"));
-		} catch (ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
+		sorteoBorrar.setFecha_sorteo(fechaSorteo);
 		this.euromillonesDao.borrar(sorteoBorrar);
 		
 		return this.listado(null);
