@@ -14,6 +14,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 @Controller
@@ -145,6 +146,16 @@ public class EuromillonesController {
 		this.euromillonesDao.borrar(sorteoBorrar);
 		
 		return this.listado(null);
+	}
+	
+	@RequestMapping(value = "/prueba", method = RequestMethod.GET)
+	public @ResponseBody ClaveValor pruebaJson() {
+		ClaveValor salida = new ClaveValor();
+		
+		salida.setClave("clave");
+		salida.setValor("valor");
+		
+		return salida;
 	}
 	
 	@Autowired

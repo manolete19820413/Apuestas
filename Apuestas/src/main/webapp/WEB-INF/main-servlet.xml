@@ -17,16 +17,8 @@
 	
 	<!-- Configures the @Controller programming model -->
 	<mvc:annotation-driven />
-
-	<bean id="viewResolver"
-		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
-		<property name="viewClass"
-			value="org.springframework.web.servlet.view.JstlView"></property>
-		<property name="prefix" value="/WEB-INF/resources/"></property>
-		<property name="suffix" value=".jsp"></property>
-	</bean>
 	
-		<!-- holding properties for database connectivity / -->
+	<!-- holding properties for database connectivity / -->
 	<context:property-placeholder location="classpath:jdbc.properties" />
 
 	<!-- enabling annotation driven configuration / -->
@@ -58,4 +50,24 @@
 		p:entityManagerFactory-ref="entityManagerFactory" />
 	
 	<tx:annotation-driven transaction-manager="transactionManager" />
+	
+	<!-- Total customization - see below for explanation. -->
+	<bean id="contentNegotiationManager"
+		class="org.springframework.web.accept.ContentNegotiationManagerFactoryBean">
+		<property name="favorPathExtension" value="true" />
+		<property name="ignoreAcceptHeader" value="true" />
+		<property name="useJaf" value="false" />
+		<property name="defaultContentType" value="text/html" />
+
+		<property name="mediaTypes">
+			<map>
+				<entry key="html" value="text/html" />
+				<entry key="json" value="application/json" />
+				<entry key="xml" value="application/xml" />
+			</map>
+		</property>
+	</bean>
+	
+	 <!-- Make this available across all of Spring MVC -->
+ 	<mvc:annotation-driven content-negotiation-manager="contentNegotiationManager" />
 </beans>
